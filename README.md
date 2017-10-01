@@ -25,11 +25,18 @@ Files added to the project:
 
 ### Inside reducers
 
-* index.js - Added reducers and combined them with a root reducers via combinReducers.
+* index.js - Added combined them with a root reducers via combinReducers.
+* posts.js - The post reducers.
+* comments.js - The comment reducer.
+* categories.js - The category reducer.
+* sorts.js - The sort reducer.
+* empty.js - The empty reducer.
+
 
 ### Inside actions - Added action creators as well as defining actions.
 
-* index.js - Added reducers and combined them with a root reducers via combinReducers.
+* index.js - File with all the action reducers.
+* types.js - File with action types.
 
 ### Inside components.
 * button.js - functional component to render a single link to the /new route.

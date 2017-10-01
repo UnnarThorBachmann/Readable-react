@@ -20,7 +20,7 @@ function shuffle(array) {
 		array[i] = swap;
 	}
 }
-export default function randomString() {
+export function randomString() {
 	
 	const letters = ['0','1','2','3','4',
         '5','6','7','8','9','10','a','b','c','d','e','f','g','h','i',
@@ -48,4 +48,56 @@ export function isEmpty(obj) {
         return true;
     else
         return false;
+}
+
+export function deletePostOnServer(id) {
+  let url= "http://localhost:3001/posts/" + id.toString();
+ 
+    fetch(url,{ headers: { 'Authorization': 'whatever-you-want', method: 'DELETE'}})
+      .then( (res) => { return(res.text()) })
+      .then((data) => {
+        console.log(data);
+      });
+}
+
+export function fetchFromServer (dispatch,setCategories,setPosts,addComment) {
+    let url= "http://localhost:3001/categories";
+    fetch(url,{ headers: { 'Authorization': 'whatever-you-want' }})
+      .then( (res) => { return(res.text()) })
+      .then((data) => {
+        const temp = JSON.parse(data).categories;
+        temp.push({path: '', name:'all'})
+        dispatch(setCategories(temp));
+      });
+    
+
+      url = "http://localhost:3001/posts";
+
+      fetch(url, { headers: { 'Authorization': 'whatever-you-want' }})
+          .then( (res) => { return(res.text()) })
+          .then((data) => {
+              const posts_array = JSON.parse(data);
+              let objects = {};
+              for (let post of posts_array) {
+                post.comments = {};
+                objects[post.id] = post;
+              } 
+                
+              dispatch(setPosts(objects));
+
+              for (let post of posts_array) {
+                fetch(url + `/${post.id}/comments`, { headers: { 'Authorization': 'whatever-you-want' }})
+                  .then( (res) => { return(res.text()) })
+                  .then((data) => {
+                    const comments_array = JSON.parse(data);
+                    for (let comment of comments_array) {
+                      dispatch(addComment(comment));
+                    }
+                  });
+              }
+              
+
+              
+        });
+        
 }

@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import {Route,Link,withRouter} from 'react-router-dom';
+import {Route,Link,withRouter,Switch} from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
 import {setCategories,setPosts,emptyFalse,addComment} from './actions';
-import Tab from './components/tab.js';
+import SortBy from './components/tab.js';
 import Posts from './components/posts.js';
 import PostDetailed from './components/postdetailed.js';
 import Edit from './components/edit.js';
 import New from './components/new.js';
+import Error from './components/error.js';
+import Tab from './components/tab.js';
+
 
 import Button from './components/button.js';
-import {timeComparator,votesComparator,commentsComparator,isEmpty} from './helpers';
+import {timeComparator,votesComparator,commentsComparator,isEmpty,fetchFromServer} from './helpers';
 
 class App extends Component {
   
@@ -24,48 +27,10 @@ class App extends Component {
   componentDidMount() {
     const {empty,dispatch} = this.props;
     if (empty) {
-      
-    let url= "http://localhost:3001/categories";
-    fetch(url,{ headers: { 'Authorization': 'whatever-you-want' }})
-      .then( (res) => { return(res.text()) })
-      .then((data) => {
-        const temp = JSON.parse(data).categories;
-        temp.push({path: '', name:'all'})
-        dispatch(setCategories(temp));
-      });
-  	
-
-    	url = "http://localhost:3001/posts";
-
-    	fetch(url, { headers: { 'Authorization': 'whatever-you-want' }})
-      		.then( (res) => { return(res.text()) })
-      		.then((data) => {
-            	const posts_array = JSON.parse(data);
-              let objects = {};
-              for (let post of posts_array) {
-                post.comments = {};
-                objects[post.id] = post;
-              } 
-                
-            	dispatch(setPosts(objects));
-
-              for (let post of posts_array) {
-                fetch(url + `/${post.id}/comments`, { headers: { 'Authorization': 'whatever-you-want' }})
-                  .then( (res) => { return(res.text()) })
-                  .then((data) => {
-                    const comments_array = JSON.parse(data);
-                    for (let comment of comments_array) {
-                      dispatch(addComment(comment));
-                    }
-                  });
-              }
-              
-
-              
-      	});
-        
-       dispatch(emptyFalse());
-  		}
+      fetchFromServer(dispatch,setCategories,setPosts,addComment);
+      dispatch(emptyFalse());
+    
+  	}
     
   }
 
@@ -82,10 +47,7 @@ class App extends Component {
           }
       }
 
-    if (isEmpty(categories)) 
-    	categories = [];
-     else
-      categories = categories.categories
+    isEmpty(categories) ?categories = []:categories = categories.categories
 
     let sortFunc;
     if (sorts.sort === 'time') 
@@ -98,53 +60,69 @@ class App extends Component {
     
 
     posts = Array.from(posts);
-    return (
-  
-      <div className="body">
-      	<div className="header">
-       		<h1>Readable Project</h1>
-      	</div>
-      	<div className="main">
-           {
+    //const deleted_posts = posts.filter((post)=> post.deleted);
+    posts = posts.filter((post)=> !post.deleted);
+    /*
+      
+          {
             categories.map((category)=>
-              <Route key={category.name} exact path={`/${category.path}`}>
-                <div>
+              <Route key={`/${category.path}`} path={`/${category.path}`} render={()=>        
+                  <SortBy/>
+          }/>)
+          }
 
-                <Tab categories={categories}/>
-                </div>
-              </Route>)
-           }
-           
            {
             categories.map((category)=>
-              <Route key={"posts" + category.name} exact path={`/${category.path}`}>
+              <Route key={"posts" + category.name} exact path={`/${category.path}`}
+              render={()=>
                 <Posts posts={posts.sort(sortFunc)} filter={category.name} header={category.name}/>
-              </Route>)
+              }/>)
            }
            
            {
-            posts.map((post)=> <Route key={post.id} exact path={`/${post.category}/${post.id}`}>
-                <PostDetailed post={post}/>
-              </Route>)
-           }
+            posts.map((post)=> <Route key={post.id} exact path={`/${post.category}/${post.id}`} render={()=>
+              <PostDetailed post={post}/>}
+            />)
+              
+           }   
            {
-            posts.map((post)=> <Route key={post.id} exact path={`/edit/${post.id}`}>
-                <Edit post={post}/>
-              </Route>)
+            posts.map((post)=> <Route key={post.id} exact path={`/edit/${post.id}`} render={()=> 
+              <Edit post={post}/>
+            }/>)
            }
            {categories.map((category)=><Route key={`${category.name}`} exact path={`/${category.path}`} render={()=> <Button/>}/>)
            }
-
-           <Route key={"new"} exact path="/new">
-                <New post={{title: '',author: '', body: '', category: 'udacity'}}/>
-            </Route>
-
-
-			     
-          
-     	</div>
-	 </div>
-     
+           
+    */
+    return (
+      <div className="body">
+        <div className="header">
+          <h1>Readable Project</h1>
+        </div>
+        <div className="main">
+        <Tab categories={categories}/>
+        <Switch>
+          {categories.map((category)=> 
+            <Route key={`/${category.name}`}exact path={`/${category.path}`} render={()=><Posts posts={posts.sort(sortFunc)} filter={`${category.name}`}/>}/>
+          )}
+           <Route key={"new"} exact path="/new" render={()=>
+            <New post={{title: '',author: '', body: '', category: 'udacity'}}/>
+            }/>
+            {
+            posts.map((post)=> <Route key={post.id} exact path={`/edit/${post.id}`} render={()=> 
+              <Edit post={post}/>
+            }/>)
+           }
+           {
+            posts.map((post)=> <Route key={post.id} exact path={`/${post.category}/${post.id}`} render={()=>
+              <PostDetailed post={post}/>}
+            />)
+           }
+             
+          <Route component={Error}/>
+        </Switch>
+      </div>
+   </div>
     );
     
   }

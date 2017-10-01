@@ -39,7 +39,6 @@ class PostDetailed extends Component {
       parentId: post.id
     }))
     this.setState({
-      deleted: false,
       title: '',
       author: '',
       body: '',
@@ -78,15 +77,15 @@ class PostDetailed extends Component {
   delete() {
     const {dispatch,post} = this.props;
     dispatch(deletePost(post.id));
-    this.setState({deleted: true})
+    
+    
   }
   
   
   render() {
     let {post,comments,categories} = this.props;
-    if (this.state.deleted) {
-      return (<Redirect to=""/>)
-    }
+    console.log('state',this.state.deleted);
+    
     comments[Symbol.iterator] = function*() {
       for (let key in this) {
               yield this[key] 

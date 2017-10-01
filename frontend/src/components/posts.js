@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import Post from './post.js';
-import { withRouter } from 'react-router-dom'
+import {withRouter,Route} from 'react-router-dom'
+import Button from './button.js';
+import SortBy from './sortby.js';
 
 class Posts extends Component {
   
@@ -15,9 +17,12 @@ class Posts extends Component {
   	return(
   		
     	<div className="posts">
+          
+          <SortBy/>
       		{filtered_posts.map((post)=> <Post key={post.id} post={post}></Post>)}
-		</div>
-		
+          <Button/>
+		  </div>
+    
     );
   }
 }

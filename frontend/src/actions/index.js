@@ -1,21 +1,18 @@
-export const CREATE_POST = 'CREATE_POST';
-export const SAVE_POST = 'EDIT_POST';
-export const DELETE_POST = 'DELETE';
-export const VOTE_POST = 'VOTE_POST';
-export const SET_POSTS = 'SET_POSTS';
-export const SET_CATEGORIES = 'SET_CATEGORIES';
-
-export const CHANGE_SORT = 'CHANGE_SORT';
-
-export const ADD_COMMENT = 'ADD_COMMENT';
-export const VOTE_COMMENT = 'VOTE_COMMENT';
-export const DELETE_COMMENT = 'DELETE_COMMENT';
-export const CREATE_COMMENT = 'CREATE_COMMENT';
-export const SAVE_COMMENT = 'SAVE_COMMENT';
-
-export const EMPTY_FALSE = 'EMPTY_FALSE';
-
-
+import {
+  CREATE_POST,
+  SAVE_POST,
+  DELETE_POST,
+  SET_POSTS,
+  VOTE_POST,
+  ADD_COMMENT,
+  CREATE_COMMENT,
+  DELETE_COMMENT,
+  VOTE_COMMENT,
+  SAVE_COMMENT,
+  SET_CATEGORIES,
+  CHANGE_SORT,
+  EMPTY_FALSE
+} from './types.js'
 
 export function emptyFalse() {
   return {
@@ -32,6 +29,7 @@ export function changeSort(sort) {
 }
 
 export function setPosts(posts) {
+
 	return {
     	type: SET_POSTS,
       	posts: {...posts}

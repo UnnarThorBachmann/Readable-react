@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import { withRouter } from 'react-router-dom'
 import FaExpand from 'react-icons/lib/fa/expand';
-import {voteComment,deleteComment,saveComment} from '../actions'; 
+import {voteComment,deleteComment,saveComment} from '../actions/'; 
 import FaArrowUp from 'react-icons/lib/fa/arrow-up';
 import FaArrowDown from 'react-icons/lib/fa/arrow-down';
 import CommentHeader from './commentHeader.js';
