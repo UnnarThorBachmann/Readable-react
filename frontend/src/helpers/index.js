@@ -53,12 +53,33 @@ export function isEmpty(obj) {
 export function deletePostOnServer(id) {
   let url= "http://localhost:3001/posts/" + id.toString();
  
-    fetch(url,{ headers: { 'Authorization': 'whatever-you-want', method: 'DELETE'}})
+    fetch(url,{ headers: { 'Authorization': 'whatever-you-want'}, method: 'DELETE'})
       .then( (res) => { return(res.text()) })
       .then((data) => {
         console.log(data);
       });
 }
+
+export function PostOnServer(post) {
+  let url= "http://localhost:3001/posts";
+    console.log(post);
+    fetch(url,{ headers: { 'Authorization': 'whatever-you-want'}, method: 'post',body: JSON.stringify(post)})
+      .then( (res) => { return(res.text()) })
+      .then((data) => {
+        console.log(data);
+      });
+}
+
+export function SaveOnServer(post) {
+  let url= "http://localhost:3001/posts/" + post.id;
+    console.log(post);
+    fetch(url,{ headers: { 'Authorization': 'whatever-you-want'}, method: 'put',body: JSON.stringify({'title': post.title,'body': post.body})})
+      .then( (res) => { return(res.text()) })
+      .then((data) => {
+        console.log(data);
+      });
+}
+
 
 export function fetchFromServer (dispatch,setCategories,setPosts,addComment) {
     let url= "http://localhost:3001/categories";

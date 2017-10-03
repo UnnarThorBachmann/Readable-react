@@ -5,7 +5,7 @@ import {
   SET_POSTS,
   VOTE_POST
 } from '../actions/types.js'
-import {randomString,deletePostOnServer} from '../helpers';
+import {randomString,deletePostOnServer,PostOnServer,SaveOnServer} from '../helpers';
 
 export default function posts(state={},action) {
 	switch(action.type) {
@@ -29,6 +29,7 @@ export default function posts(state={},action) {
         let id = randomString();
         while (state.posts.hasOwnProperty(id))
           id = randomString();
+        //PostOnServer(action.post)
 		    const ret = {
         	...state,
             posts: {
@@ -48,6 +49,7 @@ export default function posts(state={},action) {
         }
       	return  ret;
       case SAVE_POST:
+        //SaveOnServer(action.post);
   	  	return {
           ...state,
           posts: {
@@ -56,7 +58,7 @@ export default function posts(state={},action) {
           }
         }
       case DELETE_POST:
-        //deletePostOnServer(action.id);
+        deletePostOnServer(action.id);
       	return {
           ...state,
           posts: {

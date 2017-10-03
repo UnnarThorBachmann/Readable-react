@@ -60,40 +60,8 @@ class App extends Component {
     
 
     posts = Array.from(posts);
-    //const deleted_posts = posts.filter((post)=> post.deleted);
     posts = posts.filter((post)=> !post.deleted);
-    /*
-      
-          {
-            categories.map((category)=>
-              <Route key={`/${category.path}`} path={`/${category.path}`} render={()=>        
-                  <SortBy/>
-          }/>)
-          }
-
-           {
-            categories.map((category)=>
-              <Route key={"posts" + category.name} exact path={`/${category.path}`}
-              render={()=>
-                <Posts posts={posts.sort(sortFunc)} filter={category.name} header={category.name}/>
-              }/>)
-           }
-           
-           {
-            posts.map((post)=> <Route key={post.id} exact path={`/${post.category}/${post.id}`} render={()=>
-              <PostDetailed post={post}/>}
-            />)
-              
-           }   
-           {
-            posts.map((post)=> <Route key={post.id} exact path={`/edit/${post.id}`} render={()=> 
-              <Edit post={post}/>
-            }/>)
-           }
-           {categories.map((category)=><Route key={`${category.name}`} exact path={`/${category.path}`} render={()=> <Button/>}/>)
-           }
-           
-    */
+   
     return (
       <div className="body">
         <div className="header">
